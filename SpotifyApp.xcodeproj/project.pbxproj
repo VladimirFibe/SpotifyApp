@@ -6,8 +6,13 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		04A192492C8E0610008F2D58 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 04A192482C8E0610008F2D58 /* README.md */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		04A191F02C8D9658008F2D58 /* SpotifyApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SpotifyApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		04A192482C8E0610008F2D58 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -57,6 +62,7 @@
 		04A191E72C8D9658008F2D58 = {
 			isa = PBXGroup;
 			children = (
+				04A192482C8E0610008F2D58 /* README.md */,
 				04A191F22C8D9658008F2D58 /* SpotifyApp */,
 				04A191F12C8D9658008F2D58 /* Products */,
 			);
@@ -134,6 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04A192492C8E0610008F2D58 /* README.md in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
