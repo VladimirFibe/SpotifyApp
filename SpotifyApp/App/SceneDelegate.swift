@@ -36,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func makeAuth() -> UIViewController {
-        UINavigationController(rootViewController: AuthViewController())
+        UINavigationController(rootViewController: WelcomeViewController())
     }
     
     private func makeTabbar() -> UIViewController {
