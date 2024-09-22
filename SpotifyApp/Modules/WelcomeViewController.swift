@@ -1,6 +1,7 @@
 import UIKit
 
 final class WelcomeViewController: UIViewController {
+    public var completionHandler: (() -> Void)?
     private lazy var signInButton: UIButton = {
         $0.setTitle("Sign In with Spotify", for: .normal)
         $0.addTarget(self, action: #selector(didTapSignIn), for: .primaryActionTriggered)
@@ -29,6 +30,12 @@ final class WelcomeViewController: UIViewController {
     }
     
     private func handleSignIn(success: Bool) {
-        
+        if success {
+            completionHandler?()
+        } else {
+            let alert = UIAlertController(title: "Error", message: "Could not sign in", preferredStyle: .alert)
+            alert.addAction(.init(title: "OK", style: .default))
+            present(alert, animated: true)
+        }
     }
 }

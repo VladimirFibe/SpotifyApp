@@ -11,12 +11,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func start() {
-        setRootViewController(makeAuth())
-//        if AuthManager.shared.isSignedIn {
-//            setRootViewController(makeTabbar())
-//        } else {
-//            setRootViewController(makeAuth())
-//        }
+        if AuthManager.shared.isSignedIn {
+            setRootViewController(makeTabbar())
+            AuthManager.shared.tempFunc()
+        } else {
+            setRootViewController(makeAuth())
+        }
     }
     
     func setRootViewController(_ controller: UIViewController, animated: Bool = true) {
@@ -36,11 +36,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func makeAuth() -> UIViewController {
-        UINavigationController(rootViewController: WelcomeViewController())
+        let controller = WelcomeViewController()
+        controller.completionHandler = { [weak self] in self?.start()}
+        return UINavigationController(rootViewController: controller)
     }
     
     private func makeTabbar() -> UIViewController {
-        return AuthViewController()
+        let controller = UIViewController()
+        controller.view.backgroundColor = .red
+        return controller
     }
 }
 
