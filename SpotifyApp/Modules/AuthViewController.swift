@@ -36,6 +36,13 @@ extension AuthViewController: WKNavigationDelegate {
         guard let url = webView.url,
               let code = URLComponents(string: url.absoluteString)?.queryItems?.first(where: { $0.name == "code"})?.value
         else { return }
+        webView.isHidden = true
+        AuthManager.shared.exchangeCodeForToken(code: code) { [weak self] success in
+            DispatchQueue.main.async {
+                self?.navigationController?.popToRootViewController(animated: true)
+                self?.comletionHandler?(success)
+            }
+        }
         print("Code:", code)
     }
 }
