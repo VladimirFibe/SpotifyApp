@@ -13,7 +13,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func start() {
         if AuthManager.shared.isSignedIn {
             setRootViewController(makeTabbar())
-            AuthManager.shared.tempFunc()
         } else {
             setRootViewController(makeAuth())
         }
@@ -42,8 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     private func makeTabbar() -> UIViewController {
-        let controller = UIViewController()
-        controller.view.backgroundColor = .red
+        let controller = TabBarController()
         return controller
     }
 }

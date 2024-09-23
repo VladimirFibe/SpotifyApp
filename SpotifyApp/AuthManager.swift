@@ -4,12 +4,7 @@ final class AuthManager {
     static let shared = AuthManager()
     private init() {}
     
-    public var signInURL: URL? {
-        let scopes = "user-read-private"
-        let base = "https://accounts.spotify.com/authorize"
-        let string = "\(base)?response_type=code&client_id=\(Constants.clientID)&scope=\(scopes)&redirect_uri=\(Constants.redirectURL)&show_dialog=TRUE"
-        return URL(string: string)
-    }
+    public var signInURL: URL? { URL(string: Constants.url) }
     var isSignedIn: Bool { !accessToken.isEmpty }
     
     private var accessToken: String {
@@ -17,8 +12,8 @@ final class AuthManager {
         set { UserDefaults.standard.set(newValue, forKey: "accessToken") }
     }
     
-    private var refreshToken: String? {
-        get { UserDefaults.standard.string(forKey: "refreshToken") }
+    private var refreshToken: String {
+        get { UserDefaults.standard.string(forKey: "refreshToken") ?? "" }
         set { UserDefaults.standard.set(newValue, forKey: "refreshToken") }
     }
     
@@ -64,17 +59,46 @@ final class AuthManager {
         task.resume()
     }
     
-    public func refreshAccessToken() {
+    public func refreshIfNeeded(completion: @escaping (Bool) -> Void) {
+//        guard shouldRefreshToken, !refreshToken.isEmpty else {
+//            completion(true)
+//            return
+//        }
+        guard let url = URL(string: Constants.tokenURL) else { return }
+        var components = URLComponents()
+        components.queryItems = [
+            URLQueryItem(name: "grant_type", value: "refresh_token"),
+            URLQueryItem(name: "refresh_token", value: refreshToken)
+        ]
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+        request.setValue(Constants.token, forHTTPHeaderField: "Authorization")
+        request.httpBody = components.query?.data(using: .utf8)
         
+        let task = URLSession.shared.dataTask(with: request) {[weak self] data, _, error in
+            guard let data, error == nil else {
+                completion(false)
+                return }
+            do {
+                let jsonDecoder = JSONDecoder()
+                jsonDecoder.keyDecodingStrategy = .convertFromSnakeCase
+                let result = try jsonDecoder.decode(AuthResponse.self, from: data)
+                self?.cacheToken(result)
+                completion(true)
+            } catch {
+                print(error.localizedDescription)
+                completion(false)
+            }
+        }
+        task.resume()
     }
     
     private func cacheToken(_ result: AuthResponse) {
         accessToken = result.accessToken
-        refreshToken = result.refreshToken
+        if let token = result.refreshToken {
+            refreshToken = token
+        }
         tokenExpirationDate = Date().addingTimeInterval(TimeInterval(result.expiresIn))
-    }
-    
-    public func tempFunc() {
-        accessToken = ""
     }
 }
